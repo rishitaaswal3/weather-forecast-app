@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Forecast API</title>
+</head>
+<body>
+    <h1>Forecast API Test</h1>
+    <div id="results"></div>
+    <script type="module">
+        import config from './config/config.js';
+        
+        async function testForecastAPI() {
+            const results = document.getElementById('results');
+            
+            // Test coordinates for Agra (from your screenshot)
+            const lat = 27.1767;
+            const lon = 78.0081;
+            
+            // Test both API endpoints
+            const endpoints = [
+                {
+                    name: '5-day Forecast API',
+                    url: `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${config.API_KEY}`
+                },
+                {
+                    name: 'OneCall API (might need subscription)',
+                    url: `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&appid=${config.API_KEY}`
+                }
+            ];
+            
+            for (const endpoint of endpoints) {
+                results.innerHTML += `<h2>Testing ${endpoint.name}</h2>`;
+                results.innerHTML += `<p>URL: ${endpoint.url}</p>`;
+                
+                try {
+                    const response = await fetch(endpoint.url);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        results.innerHTML += `<p style="color: green;">✅ SUCCESS: Status ${response.status}</p>`;
+                        results.innerHTML += `<pre>${JSON.stringify(data, null, 2).substring(0, 500)}...</pre>`;
+                        
+                        if (data.daily) {
+                            results.innerHTML += `<p>Found ${data.daily.length} days of forecast data (OneCall format)</p>`;
+                        } else if (data.list) {
+                            results.innerHTML += `<p>Found ${data.list.length} forecast items (5-day format)</p>`;
+                        }
+                    } else {
+                        results.innerHTML += `<p style="color: red;">❌ ERROR: Status ${response.status}</p>`;
+                        results.innerHTML += `<pre style="color: red;">${JSON.stringify(data, null, 2)}</pre>`;
+                    }
+                } catch (error) {
+                    results.innerHTML += `<p style="color: red;">❌ NETWORK ERROR: ${error.message}</p>`;
+                }
+                
+                results.innerHTML += '<hr>';
+            }
+        }
+        
+        testForecastAPI();
+    </script>
+</body>
+</html>

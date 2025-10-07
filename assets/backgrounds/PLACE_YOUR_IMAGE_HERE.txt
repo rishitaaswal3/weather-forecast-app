@@ -1,0 +1,17 @@
+# Placeholder for Custom Background
+
+This folder is ready for your custom background image!
+
+**To add your background:**
+1. Place your image file in this folder
+2. Name it exactly: `default-background.jpg` (or .png, .webp)
+3. Refresh the website to see your image
+
+**Current status:** No custom image found - using gradient fallback
+
+**Supported formats:**
+- default-background.jpg
+- default-background.png  
+- default-background.webp
+
+Your custom background will automatically override the gradient and work alongside the weather-based dynamic backgrounds.
